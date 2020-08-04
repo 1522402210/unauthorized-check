@@ -281,7 +281,7 @@ if __name__ == '__main__':
     with open(file, "r", encoding='UTF-8') as f:
         line = [i for i in f.readlines()]
     bar = tqdm(total=len(line)*9)
-    with ThreadPoolExecutor(50) as pool:
+    with ThreadPoolExecutor(500) as pool:
         for target in line:
             target=target.strip()
             pool.submit(redis, target)
