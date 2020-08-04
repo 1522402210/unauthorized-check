@@ -1,3 +1,4 @@
+# coding=utf-8
 import socket
 import pymongo
 import requests
@@ -5,6 +6,8 @@ import ftplib
 from tqdm import tqdm
 import sys
 from concurrent.futures import ThreadPoolExecutor
+import logging
+logging.captureWarnings(True)
 
 
 def redis(ip):
@@ -19,6 +22,105 @@ def redis(ip):
         s.close()
     except Exception as e:
         pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 7001))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":7001 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 7002))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":7002 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 7000))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":7000 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 32768))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":32768 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 7777))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":7777 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 6969))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":6969 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 6699))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":6699 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 10000))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":10000 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
+    try:
+        socket.setdefaulttimeout(5)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((ip, 6779))
+        s.send(bytes("INFO\r\n", 'UTF-8'))
+        result = s.recv(1024).decode()
+        if "redis_version" in result:
+            print(ip + ":6779 redis未授权")
+        s.close()
+    except Exception as e:
+        pass
     finally:
         bar.update(1)
 
@@ -27,6 +129,13 @@ def mongodb(ip):
         conn = pymongo.MongoClient(ip, 27017, socketTimeoutMS=4000)
         dbname = conn.list_database_names()
         print(ip + ":27017 mongodb未授权")
+        conn.close()
+    except Exception as e:
+        pass
+    try:
+        conn = pymongo.MongoClient(ip, 28017, socketTimeoutMS=4000)
+        dbname = conn.list_database_names()
+        print(ip + ":28017 mongodb未授权")
         conn.close()
     except Exception as e:
         pass
@@ -91,6 +200,27 @@ def CouchDB(ip):
             print(ip + ":5984 CouchDB未授权")
     except Exception as e:
         pass
+    try:
+        url = 'https://' + ip +'/_utils/'
+        r = requests.get(url, timeout=5,verify = False)
+        if 'couchdb-logo' in r.content.decode():
+            print(ip + ":443 CouchDB未授权")
+    except Exception as e:
+        pass
+    try:
+        url = 'http://' + ip + ':5986'+'/_utils/'
+        r = requests.get(url, timeout=5)
+        if 'couchdb-logo' in r.content.decode():
+            print(ip + ":5986 CouchDB未授权")
+    except Exception as e:
+        pass
+    try:
+        url = 'http://' + ip +'/_utils/'
+        r = requests.get(url, timeout=5)
+        if 'couchdb-logo' in r.content.decode():
+            print(ip + ":80 CouchDB未授权")
+    except Exception as e:
+        pass
     finally:
         bar.update(1)
 
@@ -113,6 +243,34 @@ def Hadoop(ip):
             print(ip + ":50070 Hadoop未授权")
     except Exception as e:
         pass
+    try:
+        url = 'http://' + ip + ':50090'+'/dfshealth.html'
+        r = requests.get(url, timeout=5)
+        if 'hadoop.css' in r.content.decode():
+            print(ip + ":50090 Hadoop未授权")
+    except Exception as e:
+        pass
+    try:
+        url = 'http://' + ip + ':9870'+'/dfshealth.html'
+        r = requests.get(url, timeout=5)
+        if 'hadoop.css' in r.content.decode():
+            print(ip + ":9870 Hadoop未授权")
+    except Exception as e:
+        pass
+    try:
+        url = 'http://' + ip + ':50075'+'/dfshealth.html'
+        r = requests.get(url, timeout=5)
+        if 'hadoop.css' in r.content.decode():
+            print(ip + ":50075 Hadoop未授权")
+    except Exception as e:
+        pass
+    try:
+        url = 'http://' + ip + ':50030'+'/dfshealth.html'
+        r = requests.get(url, timeout=5)
+        if 'hadoop.css' in r.content.decode():
+            print(ip + ":50030 Hadoop未授权")
+    except Exception as e:
+        pass
     finally:
         bar.update(1)
 
@@ -123,7 +281,7 @@ if __name__ == '__main__':
     with open(file, "r", encoding='UTF-8') as f:
         line = [i for i in f.readlines()]
     bar = tqdm(total=len(line)*9)
-    with ThreadPoolExecutor(1000) as pool:
+    with ThreadPoolExecutor(50) as pool:
         for target in line:
             target=target.strip()
             pool.submit(redis, target)
